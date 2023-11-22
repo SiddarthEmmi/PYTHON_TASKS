@@ -10,7 +10,7 @@ class FeesManagementSystem:
 
     def view(self):
         if self.students.empty:
-            print("No students available. Please add students first.")
+            print("No students available. Please add students first.\n")
             self.admin()
             return
 
@@ -19,7 +19,7 @@ class FeesManagementSystem:
 
     def susn(self):
         if self.students.empty:
-            print("No students available. Please add students first.")
+            print("No students available. Please add students first.\n")
             self.admin()
             return
 
@@ -28,7 +28,7 @@ class FeesManagementSystem:
         if not found.empty:
             self.sdetails(found.index[0] + 1, found.iloc[0])
         else:
-            print(f"No Student found with USN: {usn}")
+            print(f"No Student found with USN: {usn}\n")
             self.admin()
 
     def add_student(self):
@@ -66,19 +66,19 @@ class FeesManagementSystem:
 
     def dusn(self):
         if self.students.empty:
-            print("No students available. Please add students first.")
+            print("No students available. Please add students first.\n")
             self.admin()
             return
 
         dusn = input("Enter USN to delete: ")
         self.students = self.students[self.students["USN"] != dusn]
-        print(f"Student with USN {dusn} deleted successfully.")
+        print(f"Student with USN {dusn} deleted successfully.\n")
         self.save_to_excel()
         self.admin()
 
     def payment(self):
         if self.students.empty:
-            print("No students available. Please add students first.")
+            print("No students available. Please add students first.\n")
             self.admin()
             return
 
@@ -90,7 +90,7 @@ class FeesManagementSystem:
             remaining_balance = student.iloc[0]["Remaining Balance"]
 
             if remaining_balance == 0:
-                print("Remaining balance is already zero. No need to make another payment.")
+                print("Remaining balance is already zero. No need to make another payment.\n")
                 self.admin()
 
             print(f"Total amount to pay: Rs.{self.original_amount[seat_category]}")
@@ -98,21 +98,29 @@ class FeesManagementSystem:
 
             pay_option = input("Do you want to pay? (yes/no): ").lower()
             if pay_option == "yes":
-                amount_paid = float(input("Enter the amount you want to pay: "))
-                remaining_balance -= amount_paid
-                print(f"Amount paid is: Rs.{amount_paid}")
-                print(f"Payment successful! Remaining balance: Rs.{remaining_balance}")
+                while True:
+                    try:
+                        amount_paid = float(input("Enter the amount you want to pay: "))
+                        if amount_paid > remaining_balance:
+                            print("Entered amount exceeds the remaining balance. Please enter a valid amount.\n")
+                        else:
+                            remaining_balance -= amount_paid
+                            print(f"Amount paid is: Rs.{amount_paid}")
+                            print(f"Payment successful! Remaining balance: Rs.{remaining_balance}")
 
-                self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = remaining_balance
-                self.save_to_excel()
-
+                            self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = remaining_balance
+                            self.save_to_excel()
+                            break
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number for the amount.\n")
 
             elif pay_option == "no":
-                print("Payment canceled.")
+                print("Payment canceled.\n")
             self.admin()
         else:
-            print(f"No Student found with USN: {usn}")
+            print(f"No Student found with USN: {usn}\n")
             self.admin()
+
 
 
     def admin(self):
@@ -121,7 +129,7 @@ class FeesManagementSystem:
         print("3. Search by USN")
         print("4. Delete student")
         print("5. Payment")
-        print("6. Exit")
+        print("6. Exit\n")
 
         ch = input("Enter your choice: ")
         if ch == "1":
@@ -138,9 +146,9 @@ class FeesManagementSystem:
         elif ch == "5":
             self.payment()
         elif ch == "6":
-            sys.exit()
+            FeesManagementSystem.main()
         else:
-            print("Incorrect Choice")
+            print("Incorrect Choice\n")
             self.admin()
 
     def sdetails(self, student_id, details):
@@ -155,7 +163,7 @@ class FeesManagementSystem:
 
     def user(self):
         if self.students.empty:
-            print("No students available. Please add students first.")
+            print("No students available. Please add students first.\n")
             FeesManagementSystem.main()
             return
 
@@ -167,10 +175,9 @@ class FeesManagementSystem:
             self.sdetails(found.index[0] + 1, found.iloc[0])
             FeesManagementSystem.main()
         else:
-            print(f"No Student found with USN: {usn}")
+            print(f"No Student found with USN: {usn}\n")
             FeesManagementSystem.main()
 
-    @staticmethod
     def main():
         print("1. Admin")
         print("2. Student")
@@ -180,17 +187,16 @@ class FeesManagementSystem:
         elif c == "2":
             o.user()
         else:
-            print("Incorrect Choice")
+            print("Incorrect Choice\n")
             FeesManagementSystem.main()
 
-    @staticmethod
     def login():
         username = input("Enter UserName: ")
         password = input("Enter password: ")
-        if username == "Sidd" and password == "1234":
+        if username == "ERYVDCS" and password == "1234":
             o.admin()
         else:
-            print("Incorrect username or login")
+            print("Incorrect username or login\n")
             FeesManagementSystem.main()
 
 o = FeesManagementSystem()
