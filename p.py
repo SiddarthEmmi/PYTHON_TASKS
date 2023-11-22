@@ -50,10 +50,13 @@ class FeesManagementSystem:
     def load_excel(self):
         try:
             self.students = pd.read_excel(self.file_name)
+            if "Remaining Balance" not in self.students.columns:
+                self.students["Remaining Balance"] = 0  
             print(f"Student details loaded from {self.file_name}")
         except FileNotFoundError:
-            self.students = pd.DataFrame(columns=["Name", "USN", "branch", "Admission yr","DOB","Seat"])
+            self.students = pd.DataFrame(columns=["Name", "USN", "branch", "Admission yr", "DOB", "Seat", "Remaining Balance"])
             print(f"File {self.file_name} not found. Created an empty student DataFrame.")
+
 
 
     def dusn(self):
@@ -65,7 +68,11 @@ class FeesManagementSystem:
         dusn = input("Enter USN to delete: ")
         self.students = self.students[self.students["USN"] != dusn]
         print(f"Student with USN {dusn} deleted successfully.")
+    
+        self.save_to_excel()
+    
         self.admin()
+
 
     def payment(self):
         if self.students.empty:
@@ -87,23 +94,39 @@ class FeesManagementSystem:
                 self.admin()
                 return
 
-            print(f"You need to pay Rs.{original_amount}")
+            if "Remaining Balance" not in self.students.columns:
+                self.students["Remaining Balance"] = 0  
+
+            remaining_balance = student.iloc[0]["Remaining Balance"]
+
+            print(f"Total amount to pay: Rs.{original_amount}")
+            print(f"Remaining balance: Rs.{remaining_balance}")
 
             pay_option = input("Do you want to pay? (yes/no): ").lower()
             if pay_option == "yes":
                 amount_paid = float(input("Enter the amount you want to pay: "))
-                remaining_balance = original_amount - amount_paid
-                print(f"Payment successful! Remaining balance: Rs.{remaining_balance}")
-                
-                # Update the remaining balance in the DataFrame
-                self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = remaining_balance
+                d=original_amount-amount_paid
+                print(f"Amount paid is: Rs.{amount_paid}")
+                print(f"Payment successful! Remaining balance: Rs.{d}")
+
+                self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = d
                 self.save_to_excel()
-            else:
+
+            # Check if the remaining balance is zero and reset it to the original amount
+                if d == 0:
+                    print("Remaining balance is zero. Resetting to total amount.")
+                    self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = original_amount
+                    self.save_to_excel()
+
+            elif pay_option == "no":
                 print("Payment canceled.")
             self.admin()
         else:
             print(f"No Student found with USN: {usn}")
             self.admin()
+
+
+
             
     def admin(self):
         print("1. Add student")
@@ -129,6 +152,9 @@ class FeesManagementSystem:
             self.payment()
         elif ch == "6":
             FeesManagementSystem.main()
+        else:
+            print("Incorrect Choice")
+            self.admin()
 
     def sdetails(self, student_id, details):
         print(f"Student ID: {student_id}")
@@ -166,6 +192,9 @@ class FeesManagementSystem:
             FeesManagementSystem.login()
         elif c == "2":
             o.user()  
+        else:
+            print("Incorrect Choice")
+            FeesManagementSystem.main()
 
     def login():
         username = input("Enter UserName: ")
