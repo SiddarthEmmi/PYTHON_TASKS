@@ -51,10 +51,10 @@ class FeesManagementSystem:
         try:
             self.students = pd.read_excel(self.file_name)
             if "Remaining Balance" not in self.students.columns:
-                self.students["Remaining Balance"] = 0  
+                self.students["Remaining Balance"] =  self.original_amount 
             print(f"Student details loaded from {self.file_name}")
         except FileNotFoundError:
-            self.students = pd.DataFrame(columns=["Name", "USN", "branch", "Admission yr", "DOB", "Seat", "Remaining Balance"])
+            self.students = pd.DataFrame(columns=["Name", "USN", "branch", "Admission yr", "DOB", "Seat"])
             print(f"File {self.file_name} not found. Created an empty student DataFrame.")
 
 
@@ -105,15 +105,15 @@ class FeesManagementSystem:
             pay_option = input("Do you want to pay? (yes/no): ").lower()
             if pay_option == "yes":
                 amount_paid = float(input("Enter the amount you want to pay: "))
-                d=original_amount-amount_paid
+                original_amount-=amount_paid
                 print(f"Amount paid is: Rs.{amount_paid}")
-                print(f"Payment successful! Remaining balance: Rs.{d}")
+                print(f"Payment successful! Remaining balance: Rs.{original_amount}")
 
-                self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = d
+                self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = original_amount
                 self.save_to_excel()
 
             # Check if the remaining balance is zero and reset it to the original amount
-                if d == 0:
+                if original_amount== 0:
                     print("Remaining balance is zero. Resetting to total amount.")
                     self.students.loc[self.students["USN"] == usn, "Remaining Balance"] = original_amount
                     self.save_to_excel()
