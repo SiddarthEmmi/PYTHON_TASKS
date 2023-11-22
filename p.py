@@ -163,7 +163,7 @@ class FeesManagementSystem:
         print(f"Branch: {details['branch']}")
         print(f"Admission Year: {details['Admission yr']}")
         print(f"DOB:{details['DOB']}")
-        print(f"Seat:{details['Seat']}")
+        print(f"Seat:{details['Seat']}\n")
         
     
             
