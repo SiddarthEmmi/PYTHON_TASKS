@@ -4,7 +4,7 @@ import sys
 class FeesManagementSystem:
     original_amount = {"K-CET": 83526, "MGMT": 300000}
 
-    def __init__(self, file_name="students.xlsx"):
+    def __init__(self, file_name="student.xlsx"):
         self.file_name = file_name
         self.load_excel()
 
@@ -32,7 +32,7 @@ class FeesManagementSystem:
             self.admin()
 
     def add_student(self):
-        name = input("Enter Name: ")
+        name = input("\nEnter Name: ")
         usn = input("Enter USN: ")
         branch = input("Enter Branch: ")
         yr = int(input("Enter Admission yr: "))
@@ -123,12 +123,12 @@ class FeesManagementSystem:
 
 
     def admin(self):
-        print("1. Add student")
+        print("\n1. Add student")
         print("2. View all students")
         print("3. Search by USN")
         print("4. Delete student")
         print("5. Payment")
-        print("6. Exit\n")
+        print("6. Exit")
 
         ch = input("Enter your choice: ")
         if ch == "1":
@@ -152,7 +152,7 @@ class FeesManagementSystem:
 
     def sdetails(self, student_id, details):
         #print(f"Student ID: {student_id}")
-        print(f"Name: {details['Name']}")
+        print(f"\nName: {details['Name']}")
         print(f"USN: {details['USN']}")
         print(f"Branch: {details['branch']}")
         print(f"Admission Year: {details['Admission yr']}")
@@ -198,7 +198,7 @@ class FeesManagementSystem:
         if username=="ERYVDCS" and password=="1234":
             o.admin()
         else:
-            print("Incorrect username or login\n")
+            print("Incorrect Username or Password\n")
             FeesManagementSystem.main()
 
 o = FeesManagementSystem()
