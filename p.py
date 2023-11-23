@@ -4,7 +4,7 @@ import sys
 class FeesManagementSystem:
     original_amount = {"K-CET": 83526, "MGMT": 300000}
 
-    def __init__(self, file_name="student.xlsx"):
+    def __init__(self, file_name="students.xlsx"):
         self.file_name = file_name
         self.load_excel()
 
@@ -60,8 +60,7 @@ class FeesManagementSystem:
                 self.students["Remaining Balance"] = 0
             print(f"Student details loaded from {self.file_name}")
         except FileNotFoundError:
-            self.students = pd.DataFrame(
-                columns=["Name", "USN", "branch", "Admission yr", "DOB", "Seat", "Remaining Balance"])
+            self.students = pd.DataFrame(columns=["Name", "USN", "branch", "Admission yr", "DOB", "Seat", "Remaining Balance"])
             print(f"File {self.file_name} not found. Created an empty student DataFrame.")
 
     def dusn(self):
@@ -181,19 +180,22 @@ class FeesManagementSystem:
     def main():
         print("1. Admin")
         print("2. Student")
+        print("3. Exit")
         c = input("Enter your choice: ")
-        if c == "1":
+        if c=="1":
             FeesManagementSystem.login()
-        elif c == "2":
+        elif c=="2":
             o.user()
+        elif c=="3":
+            sys.exit(0)
         else:
             print("Incorrect Choice\n")
             FeesManagementSystem.main()
 
     def login():
-        username = input("Enter UserName: ")
-        password = input("Enter password: ")
-        if username == "ERYVDCS" and password == "1234":
+        username=input("Enter UserName: ")
+        password=input("Enter password: ")
+        if username=="ERYVDCS" and password=="1234":
             o.admin()
         else:
             print("Incorrect username or login\n")
